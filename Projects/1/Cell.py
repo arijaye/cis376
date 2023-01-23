@@ -1,4 +1,6 @@
-class Cell:
+import GameObject
+
+class Cell(GameObject):
      
     neighbors = -1
     color = (0,0,0) # open cell

@@ -1,5 +1,6 @@
-class Maze:
+import Scene
 
+class Maze(Scene):
     cells = []
     living = 0
     dead = 0
