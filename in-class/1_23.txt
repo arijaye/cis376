@@ -1,0 +1,64 @@
+Engine class
+ - renders a Scene
+ - single Engine
+ - list of Scenes
+ - clock
+ - static delta time 
+ - static event list
+ - public loop()
+ - add/remove Scene
+ - set active Scene
+
+Scene
+ - multiple Scenes
+ - contains GameObjects
+
+
+Game objects -> [ Drawable, Updateable, DU ] <- diamond problem
+ - wall
+ - player
+ - trigger
+ - music
+ - etc.
+
+
+GameObject:
+ - x,y => location coordinates
+ - tag => object type description (tree, zombie, etc.)
+
+
+Drawable interface:
+ - public draw()
+
+
+Updateable interface:
+- public update(long) -> [time param] 
+    - check event queue from Engine
+
+
+Drawable Updateable:
+ - inherits GameObject
+ - implements Drawable and Updateable
+ 
+
+Game loop:
+ - process inputs
+ - update game objects
+ - generate outputs
+
+
+UML:
+    Association
+    - "has a"
+    - class contains instance variable(s) of another
+
+    Generalization
+    - "is a"
+    - inheritance
+
+    Realization
+    - "acts like"
+    - implement
+
+    Dependency:
+    - "needs a"
