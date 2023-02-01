@@ -1,62 +1,56 @@
 import pygame, sys
+import Notif
+from Maze import Maze
 
-# updateTime = 60 / 1000
-# last = clock.now()
-# lag = 0
-# while not_finished:
-#     current = clock.now()
-#     delta = current - last
-#     lag = lag + delta
-#     processInputs()
-#     # fixed-time loop
-#     while lag >= updateTime:
-#         update()
-#         lag = lag - updateTime
-    
-#     # Interpolate so things aren't jumpy
-#     processOutputs(lag / updateTime)
+# TODO:
+# - populate neighbors array for Cell(s)
+# - update Cell color based on neighbor state
+# - make Cells clickable for beginning seeds? need to be able to watch as maze changes states
 
+DISPLAY_DIMS = 800 # 800 x 800
+BOARDSIZE = 20 # 50 x 50
+CELLSIZE = DISPLAY_DIMS / BOARDSIZE # 16 x 16
+DISPLAY = pygame.display.set_mode((DISPLAY_DIMS, DISPLAY_DIMS))
 
 class Engine:
-    DISPLAY = pygame.display.set_mode((800, 600))
     FPS = 60
     clock = pygame.time.Clock()
-    events = pygame.event.get()
+    running = False
 
-    
 
     def __init__(self):
+        self.events = pygame.event.get()
+        self.maze = Maze(size=BOARDSIZE, cellSize=CELLSIZE)
         pygame.init()
         pygame.display.set_caption('Maze Generator')
-        self.loop()
+        self.drawBoard()
 
-     # main game loop
+
+    def drawBoard(self):
+        for row in self.maze.board:
+            for cell in row:
+                pygame.draw.rect(DISPLAY, cell.color, cell.rect, int(CELLSIZE))
+
+
+    # main game loop
     def loop(self):
-        last = Engine.clock.now()
+        last = Engine.clock.get_time()
         lag = 0
         while True:
-            # process input (events)
-            # update game objects
-            # generate outputs
-            current = Engine.clock.now()
-            delta = current - last
-            lag = lag + delta
-            # process inputs
-
-            while lag >= Engine.FPS:
-                # update()
-                lag = lag - Engine.FPS
-            
-            # processOutputs(lag/FPS)
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                print(event)
-            
-            Engine.DISPLAY.fill((255,255,255))
-            pygame.display.update()
-            Engine.clock.tick(Engine.FPS)
 
-engine = Engine()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    x, y = pygame.mouse.get_pos()
+                    Notif.notifyMBDEvent(event, x, y)
+            
+            # wait to run sim until beginning maze is drawn (4 cells with color?)
+            Engine.clock.tick(Engine.FPS)
+            pygame.display.update()
+
+
+if __name__ == '__main__':
+    engine = Engine()
+    engine.loop()
