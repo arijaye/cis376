@@ -14,30 +14,22 @@ DISPLAY = pygame.display.set_mode((DISPLAY_DIMS, DISPLAY_DIMS))
 
 
 class Engine:
-    FPS = 60
-    clock = pygame.time.Clock()
-    running = False
 
-
+    # initialize Engine
     def __init__(self):
         self.events = pygame.event.get()
         self.maze = Maze(size=BOARDSIZE, cellSize=CELLSIZE)
+        self.player = None
         pygame.init()
         pygame.display.set_caption('Maze Generator')
-        self.drawBoard()
-
-
-    def drawBoard(self):
-        for row in self.maze.board:
-            for cell in row:
-                pygame.draw.rect(DISPLAY, cell.color, cell.rect, int(CELLSIZE))
 
 
     # main game loop
     def loop(self):
-        last = Engine.clock.get_time()
-        lag = 0
+        FPS = 60
+        clock = pygame.time.Clock()
         while True:
+            clock.tick(FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -45,11 +37,11 @@ class Engine:
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = pygame.mouse.get_pos()
-                    Notif.notifyMBDEvent(event, x, y)
+                    Notif.notifyMBDEvent(x, y)
 
-            self.drawBoard()
-            # wait to run sim until beginning maze is drawn (4 cells with color?)
-            Engine.clock.tick(Engine.FPS)
+            self.maze.update()
+            DISPLAY.fill((200, 200, 200))
+            self.maze.cells.draw(DISPLAY)
             pygame.display.update()
 
 

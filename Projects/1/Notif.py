@@ -4,6 +4,6 @@ def registerMBDEvent(callback):
     MOUSEBUTTONDOWN_EVENTS.append(callback)
 
     
-def notifyMBDEvent(event, x, y):
+def notifyMBDEvent(x, y):
     for callback in MOUSEBUTTONDOWN_EVENTS:
-        callback(event, x, y)
+        callback(x, y)
