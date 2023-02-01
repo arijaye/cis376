@@ -12,6 +12,7 @@ BOARDSIZE = 20 # 50 x 50
 CELLSIZE = DISPLAY_DIMS / BOARDSIZE # 16 x 16
 DISPLAY = pygame.display.set_mode((DISPLAY_DIMS, DISPLAY_DIMS))
 
+
 class Engine:
     FPS = 60
     clock = pygame.time.Clock()
@@ -45,7 +46,8 @@ class Engine:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = pygame.mouse.get_pos()
                     Notif.notifyMBDEvent(event, x, y)
-            
+
+            self.drawBoard()
             # wait to run sim until beginning maze is drawn (4 cells with color?)
             Engine.clock.tick(Engine.FPS)
             pygame.display.update()
