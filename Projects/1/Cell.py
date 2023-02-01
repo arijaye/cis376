@@ -1,17 +1,18 @@
 from GameObject import GameObject
 import pygame
 import random
+import Notif
 
 DEADCOLOR = (0,0,0)
 
 class Cell(GameObject):
 
     def __init__(self, position, cellSize, group):
-        super().__init__(position, group)
-        self.rect = pygame.Rect(self.coordinates[0], self.coordinates[1], cellSize, cellSize)
-        self.image = pygame.Surface([cellSize, cellSize])
+        super().__init__(position, cellSize, group)
         self.setColor(color=DEADCOLOR)
         self.image.fill(self.color)
+        Notif.registerMBDEvent(self.click)
+
 
         self.neighbors = []
         self.dead = True
@@ -23,11 +24,6 @@ class Cell(GameObject):
         self.image.fill(self.color)
 
 
-    def getState(self):
-        # check state of neighboring cells
-        return self.dead
-
-
     def setState(self):
         liveNeighbors = 0
         for cell in self.neighbors:
@@ -37,12 +33,6 @@ class Cell(GameObject):
         self.setColor(color=(DEADCOLOR if self.dead else self.color))
         
 
-    def neighboringCell(self, x, y):
-        for cell in self.neighbors:
-            if cell.rect.collidepoint(x, y):
-                return True
-
-
     def getRandomColor(self):
         R = random.randint(0,255)
         G = random.randint(0,255)
@@ -50,19 +40,14 @@ class Cell(GameObject):
         return (R, G, B)
 
 
-    def click(self):
-        newcolor = self.getRandomColor()
-        self.setColor(color=(newcolor if self.dead else DEADCOLOR))
-        self.dead = not self.dead
+    def click(self, x, y):
+        if self.rect.collidepoint(x,y):
+            newcolor = self.getRandomColor()
+            self.setColor(color=(newcolor if self.dead else DEADCOLOR))
+            self.dead = not self.dead
 
 
-    def update(self, x=None, y=None):
-        if x != None and y != None:
-            if not self.rect.collidepoint(x,y):
-                if self.neighboringCell(x,y):
-                    print(f'IM THE NEIGHBOR: {self}')
-                return
-            self.click()
+    def update(self):
         self.setState()
 
 

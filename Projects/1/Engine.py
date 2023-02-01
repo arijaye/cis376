@@ -17,8 +17,8 @@ class Engine:
 
     # initialize Engine
     def __init__(self):
-        self.events = pygame.event.get()
-        self.maze = Maze(size=BOARDSIZE, cellSize=CELLSIZE)
+        self.mazeGroup = pygame.sprite.Group()
+        self.maze = Maze(size=BOARDSIZE, cellSize=CELLSIZE, group=self.mazeGroup)
         self.player = None
         pygame.init()
         pygame.display.set_caption('Maze Generator')
@@ -28,6 +28,7 @@ class Engine:
     def loop(self):
         FPS = 60
         clock = pygame.time.Clock()
+        
         while True:
             clock.tick(FPS)
             for event in pygame.event.get():
@@ -37,11 +38,9 @@ class Engine:
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = pygame.mouse.get_pos()
-                    Notif.notifyMBDEvent(x, y)
-
-            self.maze.update()
-            DISPLAY.fill((200, 200, 200))
-            self.maze.cells.draw(DISPLAY)
+                    Notif.notifyMBDEvent(x, y) # update clicked cell
+            
+            self.mazeGroup.update(DISPLAY)
             pygame.display.update()
 
 

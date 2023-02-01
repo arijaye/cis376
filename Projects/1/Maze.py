@@ -1,8 +1,7 @@
 import random
 from Cell import Cell
-import Notif
 from GameObject import GameObject
-import pygame 
+import pygame
 
 class Maze(GameObject):
     living = 0
@@ -10,13 +9,14 @@ class Maze(GameObject):
     complete = False
 
 
-    def __init__(self, size, cellSize):
+    def __init__(self, size, cellSize, group):
+        super().__init__((0,0), size, group)
+        self.group = group
         self.size = size
         self.cellSize = cellSize
         self.board = [[0]*size for i in range(size)]
         self.cells = pygame.sprite.Group()
         self.initBoard(cellSize)
-        Notif.registerMBDEvent(self.click)
         
     
     def initBoard(self, cellSize):
@@ -78,17 +78,14 @@ class Maze(GameObject):
             n += [self.board[cell[0]][cell[1]]]
 
         return n
-            
-
-    def click(self, x, y):
-        self.cells.update(x, y)
-        return
 
 
-    def update(self):
+    def update(self, display):
         self.cells.update()
-        return
+        self.cells.draw(display)
 
+    def draw(self):
+        self.cells.draw()
 
     def __str__(self):
         return f"Board: {self.board}\nBoard size: {len(self.board)}x{len(self.board[0])}"
