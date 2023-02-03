@@ -13,7 +13,6 @@ class Cell(GameObject):
         self.image.fill(self.color)
         Notif.registerMBDEvent(self.click)
 
-
         self.neighbors = []
         self.dead = True
         self.size = cellSize
@@ -22,22 +21,6 @@ class Cell(GameObject):
     def setColor(self, color):
         self.color = color
         self.image.fill(self.color)
-
-
-    def setState(self):
-        liveNeighbors = 0
-        for cell in self.neighbors:
-            if not cell.dead:
-                liveNeighbors += 1
-        self.dead = liveNeighbors < 1 or liveNeighbors > 4 if not self.dead else liveNeighbors != 3
-        self.setColor(color=(DEADCOLOR if self.dead else self.color))
-        
-
-    def getRandomColor(self):
-        R = random.randint(0,255)
-        G = random.randint(0,255)
-        B = random.randint(0,255)
-        return (R, G, B)
 
 
     def click(self, x, y):
@@ -49,6 +32,34 @@ class Cell(GameObject):
 
     def update(self):
         self.setState()
+
+
+    def setState(self):
+        dead = self.getState() 
+        if dead != self.dead:
+            self.dead = dead
+
+        # add to if statement to avoid flashing    
+        self.setColor(color=(DEADCOLOR if self.dead else self.getRandomColor()))
+
+
+    def getState(self):
+        liveNeighbors = 0
+        for cell in self.neighbors:
+            if not cell.dead:
+                liveNeighbors += 1
+
+        if self.dead:
+            return liveNeighbors != 3
+        
+        return liveNeighbors < 1 or liveNeighbors > 4
+
+
+    def getRandomColor(self):
+        R = random.randint(0,255)
+        G = random.randint(0,255)
+        B = random.randint(0,255)
+        return (R, G, B)
 
 
     def __str__(self):

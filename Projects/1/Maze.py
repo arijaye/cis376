@@ -4,17 +4,13 @@ from GameObject import GameObject
 import pygame
 
 class Maze(GameObject):
-    living = 0
-    dead = 0
-    complete = False
-
 
     def __init__(self, size, cellSize, group):
         super().__init__((0,0), size, group)
         self.group = group
         self.size = size
         self.cellSize = cellSize
-        self.board = [[0]*size for i in range(size)]
+        self.board = [[None]*size for i in range(size)]
         self.cells = pygame.sprite.Group()
         self.initBoard(cellSize)
         
@@ -35,7 +31,7 @@ class Maze(GameObject):
                     cell.color = (R, G, B)
                     cell.dead = False
                 self.board[row][col] = cell
-                pos = self.getNextCell(pos, cellSize)
+                pos = self.getNextCell(pos)
         self.initCellNeighbors()
 
 
@@ -47,15 +43,15 @@ class Maze(GameObject):
 
 
     # Get next cell in row
-    def getNextCell(self, position, cellSize):
-        width = height = self.size * cellSize
+    def getNextCell(self, position):
+        width = height = self.size * self.cellSize
         x = position[0]
         y = position[1]
         
-        x = (x + cellSize) if (x + cellSize) < width else 0
+        x = (x + self.cellSize) if (x + self.cellSize) < width else 0
         
         # move to new row
-        y = y if x > 0 else y + cellSize
+        y = y if x > 0 else y + self.cellSize
 
         # board complete
         y = y if y < height else -1
@@ -64,7 +60,9 @@ class Maze(GameObject):
     
 
     def getNeighbors(self, row, col):
-        neighbors = [(row-1, col), (row, col-1), (row+1, col), (row, col+1)]
+        neighbors = [(row-1, col-1), (row-1, col), (row-1, col+1),
+                     (row, col-1),                  (row, col+1), 
+                     (row+1, col-1),  (row+1, col), (row+1, col+1)]
         n = []
         for cell in neighbors:
             r = cell[0]
@@ -80,12 +78,9 @@ class Maze(GameObject):
         return n
 
 
-    def update(self, display):
+    def update(self):
         self.cells.update()
-        self.cells.draw(display)
 
-    def draw(self):
-        self.cells.draw()
 
     def __str__(self):
         return f"Board: {self.board}\nBoard size: {len(self.board)}x{len(self.board[0])}"

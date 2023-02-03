@@ -1,20 +1,41 @@
-import GameObject
+from GameObject import GameObject
 import pygame
 import os
+import Notif
 
-class Player(GameObject, pygame.sprite.Sprite):
+
+class Player(GameObject):
      
-    imagePath = os.path.join("images", "purple-glass-sphere-ball-download-png-11650715978ympcumd4es.png")
+    imagePath = os.path.join('Projects', '1', 'images', 'purple-glass-sphere-ball-download-png-11650715978ympcumd4es.png')
 
-    def __init__(self):
-        """Initialize the player sprite"""
-        super(Player, self).__init__()
+    def __init__(self, position, size, group):
+        super().__init__(position, size, group)
+        self.image = pygame.image.load(self.imagePath).convert_alpha()
+        Notif.registerKeyEvent(self.move)
+    
 
-        # Load the image, preserve alpha channel for transparency
-        self.surf = pygame.image.load(self.imagePath).convert_alpha()
+    def move(self, key):
+        match key:
+            case pygame.K_UP:
+                self.y += 1
+                print(self.y)
 
-        # Save the rect so you can move it
-        self.rect = self.surf.get_rect()
+            case pygame.K_DOWN:
+                self.y -= 1
+                print(self.y)
+
+            case pygame.K_LEFT:
+                self.x -= 1
+                print(self.x)
+
+            case pygame.K_RIGHT:
+                self.x += 1
+                print(self.x)
+
+
+    def update(self):
+        return
+
 
     def __str__(self):
         return f"Location: {self.coordinates}"
