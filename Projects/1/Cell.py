@@ -1,14 +1,13 @@
 from GameObject import GameObject
-import pygame
 import random
 import Notif
 
-DEADCOLOR = (0,0,0)
+DEADCOLOR = (255,255,255)
 
 class Cell(GameObject):
 
     def __init__(self, position, cellSize, group):
-        super().__init__(position, cellSize, group)
+        super().__init__(coordinates=position, size=(cellSize,cellSize), group=group)
         self.setColor(color=DEADCOLOR)
         self.image.fill(self.color)
         Notif.registerMBDEvent(self.click)
@@ -38,9 +37,7 @@ class Cell(GameObject):
         dead = self.getState() 
         if dead != self.dead:
             self.dead = dead
-
-        # add to if statement to avoid flashing    
-        self.setColor(color=(DEADCOLOR if self.dead else self.getRandomColor()))
+            self.setColor(color=(DEADCOLOR if self.dead else self.getRandomColor()))
 
 
     def getState(self):
@@ -56,11 +53,11 @@ class Cell(GameObject):
 
 
     def getRandomColor(self):
-        R = random.randint(0,255)
-        G = random.randint(0,255)
-        B = random.randint(0,255)
+        R = random.randint(0,254)
+        G = random.randint(0,254)
+        B = random.randint(0,254)
         return (R, G, B)
 
 
     def __str__(self):
-        return f"Coordinates: {self.coordinates}"
+        return f"location: {self.coordinates}"

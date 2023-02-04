@@ -1,41 +1,60 @@
 from GameObject import GameObject
 import pygame
 import os
-import Notif
-
 
 class Player(GameObject):
      
-    imagePath = os.path.join('Projects', '1', 'images', 'purple-glass-sphere-ball-download-png-11650715978ympcumd4es.png')
+    imagePath = os.path.join('Projects', '1', 'images', 'sprite.png')
 
-    def __init__(self, position, size, group):
-        super().__init__(position, size, group)
+    def __init__(self, position):
+        self.scaleAndSetImage()
+        self.direction = (0,0)
+        super().__init__(coordinates=position, size=(self.rect.width,self.rect.height))
+
+
+    def scaleAndSetImage(self):
         self.image = pygame.image.load(self.imagePath).convert_alpha()
-        Notif.registerKeyEvent(self.move)
-    
 
-    def move(self, key):
+        rect = self.image.get_rect()
+        (scaledX, scaledY) = (rect.width/30, rect.height/30)
+
+        self.image = pygame.transform.scale(self.image, (scaledX, scaledY))
+        self.rect = self.image.get_rect()
+
+
+    def update(self, key, delta, boardsize):
+        x = self.coordinates[0]
+        y = self.coordinates[1]
+        pixels = 100 * delta
+
         match key:
             case pygame.K_UP:
-                self.y += 1
-                print(self.y)
+                self.direction = (0, -1)
+                y -= pixels
 
             case pygame.K_DOWN:
-                self.y -= 1
-                print(self.y)
+                self.direction = (0, 1)
+                y += pixels
 
             case pygame.K_LEFT:
-                self.x -= 1
-                print(self.x)
+                self.direction = (-1, 0)
+                x -= pixels
 
             case pygame.K_RIGHT:
-                self.x += 1
-                print(self.x)
+                self.direction = (1, 0)
+                x += pixels
+        
+        self.rect = pygame.Rect(x, y, self.rect.width, self.rect.height)
+        self.checkForCollisions(boardsize)
+        self.coordinates = (self.rect.x, self.rect.y)
 
 
-    def update(self):
-        return
+    def checkForCollisions(self, boardsize):
+        self.rect.top = 0 if self.rect.top < 0 else self.rect.top
+        self.rect.right = boardsize if self.rect.right > boardsize else self.rect.right
+        self.rect.bottom = boardsize if self.rect.bottom > boardsize else self.rect.bottom 
+        self.rect.left = 0 if self.rect.left < 0 else self.rect.left
 
 
     def __str__(self):
-        return f"Location: {self.coordinates}"
+        return f"location: {self.coordinates}"

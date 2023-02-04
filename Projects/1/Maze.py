@@ -2,19 +2,28 @@ import random
 from Cell import Cell
 from GameObject import GameObject
 import pygame
+import Notif
 
 class Maze(GameObject):
 
-    def __init__(self, size, cellSize, group):
-        super().__init__((0,0), size, group)
-        self.group = group
+    def __init__(self, size, player, cellSize, group):
+        super().__init__(coordinates=(0,0), size=(size, size), group=group)
         self.size = size
+        self.player = player
         self.cellSize = cellSize
-        self.board = [[None]*size for i in range(size)]
-        self.cells = pygame.sprite.Group()
+        self.group = group
+        self.initVariables(size)
         self.initBoard(cellSize)
+        Notif.registerMBDEvent(self.updateLists)
+
+
+    def initVariables(self, size):
+        self.cells = pygame.sprite.Group()
+        self.board = [[None]*size for i in range(size)]
+        self.living = []
+        self.dead = []
         
-    
+
     def initBoard(self, cellSize):
         pos = (0, 0)
         mid = self.size/2
@@ -30,6 +39,10 @@ class Maze(GameObject):
                     B = random.randint(0,255)
                     cell.color = (R, G, B)
                     cell.dead = False
+                    self.living.append(cell)
+                else:
+                    self.dead.append(cell)
+
                 self.board[row][col] = cell
                 pos = self.getNextCell(pos)
         self.initCellNeighbors()
@@ -78,8 +91,71 @@ class Maze(GameObject):
         return n
 
 
-    def update(self):
-        self.cells.update()
+    def update(self, run, play, key=None, delta=None):
+        if run:
+            self.cells.update()
+        if play:
+            if key != None and delta != None:
+                boardsize = self.size * self.cellSize
+                self.player.update(key, delta, boardsize)
+                self.checkForCollisions()
+        self.updateLists()
+
+
+    def checkForCollisions(self):
+        for cell in self.living:
+            collision = pygame.Rect.colliderect(self.player.rect, cell.rect)
+            if collision:
+                self.updatePlayerPos(cell) 
+
+
+    def updatePlayerPos(self, cell):
+        playerRect = self.player.rect
+        cellRect = cell.rect
+        horizontal = self.player.direction[0] != 0
+
+        if horizontal:
+            right = self.player.direction[0] > 0
+            if right:
+                if playerRect.right > cellRect.left:
+                    playerRect.right = cellRect.left
+            elif playerRect.left < cellRect.right:
+                playerRect.left = cellRect.right
+        else:
+            down = self.player.direction[1] > 0
+            if down:
+                if playerRect.top < cellRect.bottom:
+                    playerRect.bottom = cellRect.top
+            elif playerRect.bottom > cellRect.top:
+                playerRect.top = cellRect.bottom
+            
+        self.player.rect = playerRect
+        self.player.coordinates = playerRect.topleft
+    
+    
+    def updateLists(self, x=None, y=None):
+        coordinates = (x, y) if x != None and y != None else None
+
+        for cell in self.cells:
+            if coordinates != None:
+                if cell.rect.collidepoint(x, y):
+                    self.addCell(cell)
+                    return
+            else:
+                self.addCell(cell)
+
+
+    def addCell(self, cell):
+        if cell.dead and (cell in self.living): # cell is dead, but in living list
+            self.living.remove(cell)
+            if cell not in self.dead:
+                self.dead.append(cell)
+                print(f'{cell} added to dead')
+        elif not cell.dead and (cell in self.dead): # cell is alive, but in dead list
+            self.dead.remove(cell)
+            if cell not in self.living:
+                self.living.append(cell)
+                print(f'{cell} added to living')
 
 
     def __str__(self):
