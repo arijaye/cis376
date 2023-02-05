@@ -14,7 +14,7 @@ class Maze(GameObject):
         self.group = group
         self.initVariables(size)
         self.initBoard(cellSize)
-        Notif.registerMBDEvent(self.updateLists)
+        Notif.registerMBDEvent(self.updateLists) # REMOVE
 
 
     def initVariables(self, size):

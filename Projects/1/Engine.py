@@ -8,7 +8,7 @@ DISPLAY_DIMS = 600 # 800 x 800
 BOARDSIZE = 20 # 50 x 50
 CELLSIZE = DISPLAY_DIMS / BOARDSIZE # 16 x 16
 DISPLAY = pygame.display.set_mode((DISPLAY_DIMS, DISPLAY_DIMS))
-FPS = 60
+FPS = 20
 
 class Engine:
 
@@ -42,7 +42,7 @@ class Engine:
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = pygame.mouse.get_pos()
-                    Notif.notifyMBDEvent(x, y)
+                    Notif.notifyMBDEvent(x, y) #remove
 
                 if event.type == pygame.KEYDOWN:
                     match event.key:

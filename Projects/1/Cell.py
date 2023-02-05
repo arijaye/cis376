@@ -10,7 +10,7 @@ class Cell(GameObject):
         super().__init__(coordinates=position, size=(cellSize,cellSize), group=group)
         self.setColor(color=DEADCOLOR)
         self.image.fill(self.color)
-        Notif.registerMBDEvent(self.click)
+        Notif.registerMBDEvent(self.click) # REMOVE (use maze)
 
         self.neighbors = []
         self.dead = True
