@@ -37,7 +37,8 @@ class Cell(GameObject):
         dead = self.getState() 
         if dead != self.dead:
             self.dead = dead
-            self.setColor(color=(DEADCOLOR if self.dead else self.getRandomColor()))
+            
+        self.setColor(color=(DEADCOLOR if self.dead else self.getRandomColor()))
 
 
     def getState(self):

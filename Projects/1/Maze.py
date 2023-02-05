@@ -150,13 +150,11 @@ class Maze(GameObject):
             self.living.remove(cell)
             if cell not in self.dead:
                 self.dead.append(cell)
-                print(f'{cell} added to dead')
         elif not cell.dead and (cell in self.dead): # cell is alive, but in dead list
             self.dead.remove(cell)
             if cell not in self.living:
                 self.living.append(cell)
-                print(f'{cell} added to living')
 
 
     def __str__(self):
-        return f"Board: {self.board}\nBoard size: {len(self.board)}x{len(self.board[0])}"
+        return f"Board size: {len(self.board)}x{len(self.board[0])}\n- Dead: {len(self.dead)}\n- Living: {len(self.living)}"

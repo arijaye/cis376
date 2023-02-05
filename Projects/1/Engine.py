@@ -8,6 +8,7 @@ DISPLAY_DIMS = 600 # 800 x 800
 BOARDSIZE = 20 # 50 x 50
 CELLSIZE = DISPLAY_DIMS / BOARDSIZE # 16 x 16
 DISPLAY = pygame.display.set_mode((DISPLAY_DIMS, DISPLAY_DIMS))
+FPS = 60
 
 class Engine:
 
@@ -24,7 +25,6 @@ class Engine:
 
     # main game loop
     def loop(self):
-        FPS = 60
         clock = pygame.time.Clock()
         last = clock.get_time()
         runGenerator = False
@@ -44,29 +44,32 @@ class Engine:
                     x, y = pygame.mouse.get_pos()
                     Notif.notifyMBDEvent(x, y)
 
-                if event.type == pygame.KEYDOWN:    
+                if event.type == pygame.KEYDOWN:
                     match event.key:
                         case pygame.K_SPACE:
                             runGenerator = not runGenerator
+                            play = False
                         case pygame.K_p:
                             play = not play
+                            runGenerator = False
 
             self.updateObjects(runGenerator, play, delta)
             self.drawBoard(play)
             clock.tick(FPS)
+
         print('YOU WIN')
 
 
-    def updateObjects(self, run, play, delta):
-        if play:
+    def updateObjects(self, run, playing, delta):
+        if playing:
             keys = pygame.key.get_pressed()
             moveKeys = [pygame.K_UP, pygame.K_DOWN, pygame.K_RIGHT, pygame.K_LEFT]
             for key in moveKeys:
                 if keys[key]:
-                    self.mazeGroup.update(run, play, key, delta)
+                    self.mazeGroup.update(run, playing, key, delta)
                     
         elif run:
-            self.mazeGroup.update(run, play)
+            self.mazeGroup.update(run, playing)
 
 
     def drawBoard(self, playing):
@@ -79,7 +82,6 @@ class Engine:
             DISPLAY.blit(self.player.image, self.player.coordinates)
             if self.winningCell.rect.bottomright == self.player.rect.bottomright:
                 self.won = True
-
         pygame.display.update()
 
 
