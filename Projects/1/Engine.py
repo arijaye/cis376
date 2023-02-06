@@ -4,15 +4,29 @@ import Notif
 from Player import Player
 from Maze import Maze
 
+# GLOBALS
 DISPLAY_DIMS = 600 # 800 x 800
 BOARDSIZE = 20 # 50 x 50
 CELLSIZE = DISPLAY_DIMS / BOARDSIZE # 16 x 16
 DISPLAY = pygame.display.set_mode((DISPLAY_DIMS, DISPLAY_DIMS))
 FPS = 20
 
-class Engine:
+""" Main Game Engine for Maze Generator/Game.
 
-    # initialize Engine
+Engine for Maze Generator/Game. Runs the main
+game loop and contains objects of the Maze
+and Player classes. 
+
+Typical usage example:
+  engine = Engine()
+  engine.loop()
+"""
+class Engine:
+    """Initializes Engine.x
+    Initializes pygame, Maze, and Player.
+    Returns:
+        a new Engine object
+    """
     def __init__(self):
         self.mazeGroup = pygame.sprite.Group()
         self.player = Player(position=(0,0))
@@ -23,13 +37,17 @@ class Engine:
         pygame.display.set_caption('Maze Generator')
 
 
-    # main game loop
+    """Main game loop.x
+    Processes input, updates objects,
+    generates outputs.
+    """
     def loop(self):
         clock = pygame.time.Clock()
         last = clock.get_time()
         runGenerator = False
         play = False
         self.won = False
+
         while not self.won:
             current = clock.get_time()
             delta = current - last
@@ -60,6 +78,15 @@ class Engine:
         print('YOU WIN')
 
 
+    """Update game objects.x
+    Updates objects depending on setting.
+    If running, updates maze cells. If playing,
+    updates player.
+    Args:
+        run: running maze generator?
+        playing: playing maze game?
+        delta: delta from game loop
+    """
     def updateObjects(self, run, playing, delta):
         if playing:
             keys = pygame.key.get_pressed()
@@ -72,6 +99,12 @@ class Engine:
             self.mazeGroup.update(run, playing)
 
 
+    """Draw board.x
+    Draws board from maze object.
+    Draws player if playing.
+    Args:
+        playing: playing maze game?
+    """
     def drawBoard(self, playing):
         for row in range(BOARDSIZE):
             for col in range(BOARDSIZE):

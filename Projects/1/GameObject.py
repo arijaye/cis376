@@ -1,9 +1,26 @@
 import pygame
 
+""" GameObject class.
+
+Base class for game object in
+Maze Generator. Maze, cells, and player
+are all GameObjects (pygame.Sprites).
+
+"""
 class GameObject(pygame.sprite.Sprite):
 
+    # location of game object
     coordinates = (-1, -1)
 
+    """Initializes GameObject.x
+    Args:
+        coordinates: GameObject's position on display.
+        size: size of game object
+        group: sprite group of GameObject; default to none
+
+    Returns:
+        a new GameObject
+    """
     def __init__(self, coordinates, size, group=None):
         self.coordinates = coordinates
 
