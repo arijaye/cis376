@@ -19,7 +19,7 @@ class Player(GameObject):
         a new Player object
     """
     def __init__(self, position):
-        self.imagePath = os.path.join('Projects', '1', 'images', 'sprite.png')
+        self.imagePath = os.path.join('images', 'sprite.png')
         self.scaleAndSetImage()
         self.direction = (0,0)
         super().__init__(coordinates=position, size=(self.rect.width,self.rect.height))
