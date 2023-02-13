@@ -1,14 +1,38 @@
 
 import math
 
-class Vector3:
+""" Vector3 class; represents 4 point vector.
 
+Attributes:
+    a: x value of vector
+    b: y value of vector
+    c: z value of vector
+    d: w value of vector
+"""
+class Vector3:
+    """Initializes Vector3
+    Args:
+        a: x value of vector
+        b: y value of vector
+        c: z value of vector
+        d: w value of vector
+
+    Returns:
+        a new Vector3 object
+    """
     def __init__(self, a, b, c, d):
         self.a = a
         self.b = b
         self.c = c
         self.d = d
 
+
+    """Gets cross product of two Vector3s
+    Args:
+        v: Vector3 to multiply this by
+    Returns:
+        a new Vector3 object
+    """
     def crossProduct(self, v):
         a = self.a * v.a
         b = self.b * v.b
@@ -17,6 +41,13 @@ class Vector3:
 
         return Vector3(a,b,c,d)
     
+  
+    """Gets dot product of two Vector3s
+    Args:
+        v: Vector3 to multiply this by
+    Returns:
+        a new Vector3 object
+    """
     def dotProduct(self, v):
         a = self.a * v.a
         b = self.b * v.b
@@ -25,6 +56,13 @@ class Vector3:
 
         return a + b + c + d
     
+    
+    """Gets angle between two Vector3s
+    Args:
+        v: Vector3 to get angle between
+    Returns:
+        angle in radians between this and v
+    """
     def angleBetween(self, v):
         # arccos(dot/mag1*mag2)
         dot = self.dotProduct(v)
@@ -34,6 +72,13 @@ class Vector3:
 
         return math.acos(quo)
     
+   
+    """Add two Vector3s
+    Args:
+        v: Vector3 to add
+    Returns:
+        a new Vector3 with sum
+    """
     def add(self, v):
         a = self.a + v.a
         b = self.b + v.b
@@ -42,6 +87,13 @@ class Vector3:
 
         return Vector3(a,b,c,d)
     
+    
+    """Subtract two Vector3s
+    Args:
+        v: Vector3 to subtract
+    Returns:
+        a new Vector3 with difference
+    """
     def subtract(self, v):
         a = self.a - v.a
         b = self.b - v.b
@@ -50,6 +102,11 @@ class Vector3:
 
         return Vector3(a,b,c,d)
     
+    
+    """Normalize this Vector3
+    Returns:
+        normalized version of this
+    """
     def normalize(self):
         mag = self.magnitude(sqrt=True)
         a = self.a / mag
@@ -59,7 +116,14 @@ class Vector3:
 
         return Vector3(a,b,c,d)
     
-    # with and without squareroot
+   
+    """Get magintude of this Vector3
+    Args:
+        sqrt: boolean determining if square root is 
+            included in returned maginitude
+    Returns:
+        magnitude of this
+    """
     def magnitude(self, sqrt):
         a_2 = self.a * self.a
         b_2 = self.b * self.b
@@ -69,6 +133,13 @@ class Vector3:
         sum = a_2 + b_2 + c_2 + d_2
         return math.sqrt(sum) if sqrt else sum
     
+
+    """Check if two vectors are equal
+    Args:
+        v: Vector3 to compare this to
+    Returns:
+        boolean; true if equal, false if not
+    """
     def eq(self, v):
         a = self.a == v.a
         b = self.b == v.b
